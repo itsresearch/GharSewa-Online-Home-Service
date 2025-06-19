@@ -1,0 +1,400 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Service Bookings - GharSewa Admin</title>
+  <meta content="Admin dashboard for managing GharSewa service bookings" name="description">
+  <meta content="GharSewa, home services, admin dashboard" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f8f9fd;
+      font-family: 'Nunito', sans-serif;
+      color: #333;
+    }
+    .header {
+      background-color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 15px 20px;
+    }
+    .header .logo img {
+      max-height: 40px;
+    }
+    .header .logo span {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e2a44;
+      margin-left: 10px;
+    }
+    .sidebar {
+      background-color: #1e2a44;
+      color: #fff;
+      padding-top: 20px;
+      min-height: 100vh;
+    }
+    .sidebar .nav-link {
+      color: #b0b9d6;
+      font-size: 1rem;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 5px 10px;
+      transition: all 0.3s ease;
+    }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+      background-color: #2a3b6b;
+      color: #fff;
+    }
+    .sidebar .nav-heading {
+      color: #f47b44;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 15px 20px;
+    }
+    .main {
+      padding: 40px 30px;
+      background-color: #f8f9fd;
+    }
+    .pagetitle h1 {
+      color: #1e2a44;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .breadcrumb-item a {
+      color: #f47b44;
+      text-decoration: none;
+    }
+    .breadcrumb-item a:hover {
+      text-decoration: underline;
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      background: #fff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 30px;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    }
+    .card-title {
+      color: #f47b44;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+    .card-body {
+      padding: 25px;
+    }
+    .search-bar {
+      max-width: 350px;
+      margin-bottom: 20px;
+    }
+    .search-bar input {
+      border-radius: 8px;
+      border: 1px solid #e0e4ec;
+      padding: 10px 15px;
+      font-size: 0.95rem;
+    }
+    .table th {
+      background-color: #f8f9fd;
+      color: #1e2a44;
+      font-weight: 600;
+      padding: 15px;
+    }
+    .table td {
+      padding: 15px;
+      vertical-align: middle;
+    }
+    .table tbody tr {
+      transition: background-color 0.3s ease;
+    }
+    .table tbody tr:hover {
+      background-color: #f5f6fa;
+    }
+    .badge {
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border-radius: 12px;
+    }
+    .status-action-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .toggle-complete-btn {
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    .toggle-complete-btn:hover {
+      opacity: 0.9;
+    }
+    @media (max-width: 991px) {
+      .main {
+        padding: 20px;
+      }
+      .card {
+        margin-bottom: 20px;
+      }
+      .status-action-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .action-buttons {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="header" class="header fixed-top d-flex align-items-center">
+  <div class="d-flex align-items-center justify-content-between">
+    <a href="{% url 'user_dashboard' %}" class="logo d-flex align-items-center">
+      <img src="{% static 'assets/img/logo.png' %}" alt="GharSewa Logo">
+      <span class="d-none d-lg-block">GharSewa Admin</span>
+    </a>
+    <i class="bi bi-list toggle-sidebar-btn"></i>
+  </div>
+  <nav class="header-nav ms-auto">
+    <ul class="d-flex align-items-center">
+      <li class="nav-item dropdown pe-3">
+        <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+          {% if request.user.profile_photo %}
+            <img src="{{ request.user.profile_photo }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+          {% else %}
+            <img src="{% static 'assets/img/profile-img.jpg' %}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+          {% endif %}
+          <span class="d-none d-md-block dropdown-toggle ps-2">{{ request.user.name|default:request.user.email }}</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+          <li class="dropdown-header">
+            <h6>{{ request.user.name|default:"User" }}</h6>
+            <span>Admin</span>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{% url 'user_profile' %}">
+              <i class="bi bi-person"></i>
+              <span>My Profile</span>
+            </a>
+          </li>
+          <li><hr class="dropdown-divider"></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'user_dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="{% url 'service_bookings' %}">
+          <i class="bi bi-list-task"></i>
+          <span>Service Bookings</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'service_providers' %}">
+          <i class="bi bi-person-check"></i>
+          <span>Service Providers</span>
+        </a>
+      </li>
+      <li class="nav-heading">Quick Actions</li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'add_booking' %}">
+          <i class="bi bi-plus-circle"></i>
+          <span>Add New Booking</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'user_profile' %}">
+          <i class="bi bi-person"></i>
+          <span>Update Profile</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'add_service_provider' %}">
+          <i class="bi bi-person-plus"></i>
+          <span>Add Service Provider</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Service Bookings</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item active">Service Bookings</li>
+        </ol>
+      </nav>
+    </div>
+
+    <section class="section">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">All Service Bookings</h5>
+
+          <!-- Search Input -->
+          <div class="search-bar">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by customer name...">
+          </div>
+
+          <table class="table table-borderless" id="bookingTable">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Service</th>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for booking in bookings %}
+              <tr id="booking-row-{{ booking.id }}">
+                <th scope="row"><a href="{% url 'view_booking' booking.id %}">{{ booking.id }}</a></th>
+                <td>{{ booking.name }}</td>
+                <td>{{ booking.get_service_display }}</td>
+                <td>{{ booking.preferred_date|date:"d M Y" }}</td>
+                <td>
+                  <div class="status-action-container">
+                    <span class="badge bg-{% if booking.status == 'pending' %}warning{% elif booking.status == 'approved' %}success{% elif booking.status == 'rejected' %}danger{% else %}info{% endif %}" id="status-badge-{{ booking.id }}">{{ booking.get_status_display }}</span>
+                    {% if booking.status == 'pending' %}
+                      <button class="btn btn-sm btn-success toggle-complete-btn" data-booking-id="{{ booking.id }}">Mark as Completed</button>
+                    {% else %}
+                      <button class="btn btn-sm btn-secondary" disabled>Completed</button>
+                    {% endif %}
+                  </div>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <a href="{% url 'view_booking' booking.id %}" class="btn btn-sm btn-primary" title="View"><i class="bi bi-eye"></i></a>
+                    <a href="{% url 'edit_booking' booking.id %}" class="btn btn-sm btn-warning" title="Edit"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'delete_booking' booking.id %}" class="btn btn-sm btn-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this booking?')"><i class="bi bi-trash"></i></a>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="6" class="text-center">No service bookings</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Scripts -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <!-- Search and Toggle Script -->
+  <script>
+    // Search Functionality
+    document.addEventListener('DOMContentLoaded', function () {
+      const searchInput = document.getElementById('searchInput');
+      const rows = document.querySelectorAll('#bookingTable tbody tr');
+
+      searchInput.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase();
+
+        rows.forEach(row => {
+          const customerCell = row.querySelector('td:nth-child(2)');
+          if (customerCell) {
+            const customerName = customerCell.textContent.toLowerCase();
+            if (customerName.includes(searchTerm)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          }
+        });
+      });
+    });
+
+    // Toggle Complete Button
+    document.querySelectorAll('.toggle-complete-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const bookingId = this.getAttribute('data-booking-id');
+        const row = document.getElementById(`booking-row-${bookingId}`);
+        const statusBadge = document.getElementById(`status-badge-${bookingId}`);
+
+        fetch("{% url 'update_booking_status' %}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+          },
+          body: JSON.stringify({ booking_id: bookingId, status: 'completed' }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            statusBadge.textContent = 'Completed';
+            statusBadge.className = 'badge bg-info';
+            this.textContent = 'Completed';
+            this.className = 'btn btn-sm btn-secondary';
+            this.disabled = true;
+            setTimeout(() => {
+              row.style.transition = 'opacity 0.5s';
+              row.style.opacity = '0';
+              setTimeout(() => row.remove(), 500);
+            }, 1000);
+          } else {
+            alert('Failed to update status: ' + data.error);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while updating the status.');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

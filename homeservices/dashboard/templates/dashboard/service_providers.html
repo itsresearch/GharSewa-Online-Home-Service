@@ -1,0 +1,289 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Service Providers - GharSewa Admin</title>
+  <meta content="Manage service providers for GharSewa" name="description">
+  <meta content="GharSewa, home services, admin dashboard, service providers" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/simple-datatables/style.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f5f6fa;
+      font-family: 'Nunito', sans-serif;
+    }
+    .header {
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar {
+      background-color: #1e2a44;
+      color: #fff;
+    }
+    .sidebar .nav-link {
+      color: #b0b9d6;
+    }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+      background-color: #2a3b6b;
+      color: #fff;
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(145deg, #ffffff, #f8f9fd);
+    }
+    .card-title {
+      color: #F47B44;
+      font-weight: 700;
+    }
+    .provider-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+    }
+    .search-bar {
+      max-width: 300px;
+      margin-bottom: 1rem;
+    }
+    .card-header {
+      padding: 15px 25px;
+      border-bottom: 1px solid #e0e4ec;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-add-provider {
+      background-color: #f47b44;
+      border-color: #f47b44;
+      color: #fff;
+      padding: 8px 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .btn-add-provider:hover {
+      background-color: #e5632f;
+      border-color: #e5632f;
+    }
+  </style>
+</head>
+<body>
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{% url 'user_dashboard' %}" class="logo d-flex align-items-center">
+        <img src="{% static 'assets/img/logo.png' %}" alt="GharSewa Logo">
+        <span class="d-none d-lg-block">GharSewa Admin</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            {% if request.user.profile_photo %}
+              <img src="{{ request.user.profile_photo }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+            {% else %}
+              <img src="{% static 'assets/img/profile-img.jpg' %}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+            {% endif %}
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ request.user.name|default:request.user.email }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{ request.user.name|default:"User" }}</h6>
+              <span>Admin</span>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'user_profile' %}">
+                <i class="bi bi-person"></i>
+                <span>My Profile</span>
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}">
+                <i class="bi bi-box-arrow-right"></i>
+                <span>Sign Out</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'user_dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'service_bookings' %}">
+          <i class="bi bi-list-task"></i>
+          <span>Service Bookings</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="{% url 'service_providers' %}">
+          <i class="bi bi-person-check"></i>
+          <span>Service Providers</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'manage_users' %}">
+          <i class="bi bi-people"></i>
+          <span>Manage Users</span>
+        </a>
+      </li>
+      <li class="nav-heading">Quick Actions</li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'add_booking' %}">
+          <i class="bi bi-plus-circle"></i>
+          <span>Add New Booking</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'user_profile' %}">
+          <i class="bi bi-person"></i>
+          <span>Update Profile</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'add_service_provider' %}">
+          <i class="bi bi-person-plus"></i>
+          <span>Add Service Provider</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- ======= Main Content ======= -->
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Service Providers</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item active">Service Providers</li>
+        </ol>
+      </nav>
+    </div>
+
+    <section class="section">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Service Providers List</h5>
+              <a href="{% url 'add_service_provider' %}" class="btn-add-provider">Add Service Provider</a>
+            </div>
+            <div class="card-body">
+              <div class="search-bar">
+                <input type="text" id="searchInputProviders" class="form-control" placeholder="Search by name...">
+              </div>
+              <table class="table table-borderless datatable" id="providersTable">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Service Type</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for provider in service_providers|dictsortreversed:"created_at" %}
+                  <tr>
+                    <td>{{ provider.name }}</td>
+                    <td>{{ provider.email }}</td>
+                    <td>{{ provider.phone }}</td>
+                    <td>{{ provider.address }}</td>
+                    <td>{{ provider.age }}</td>
+                    <td>{{ provider.get_service_type_display }}</td>
+                    <td class="action-buttons">
+                      <a href="{% url 'edit_service_provider' provider.id %}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-pencil"></i> Edit
+                      </a>
+                      <a href="{% url 'delete_service_provider' provider.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this provider?')">
+                        <i class="bi bi-trash"></i> Delete
+                      </a>
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr>
+                    <td colspan="7" class="text-center">No service providers available</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      © Copyright <strong><span>GharSewa Admin</span></strong>. All Rights Reserved
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/simple-datatables/simple-datatables.js' %}"></script>
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  <script src="{% static 'assets/js/search.js' %}"></script>
+  <script>
+    // JavaScript for Search Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('searchInputProviders');
+      const providersTable = document.getElementById('providersTable');
+      const rows = providersTable.querySelectorAll('tbody tr');
+
+      searchInput.addEventListener('keyup', function() {
+        const filter = searchInput.value.toLowerCase();
+        rows.forEach(row => {
+          const nameCell = row.cells[0].textContent.toLowerCase(); // Updated to cell[0] since Photo column is removed
+          if (nameCell.includes(filter)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

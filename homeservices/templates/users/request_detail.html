@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hidden form for cancel request -->
+    <form id="cancelForm" method="post" action="{% url 'cancel_request' request_obj.id %}" style="display: none;">
+        {% csrf_token %}
+    </form>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Service Request Details</h5>
+                        <div>
+                            {% if request_obj.status == 'pending' %}
+                                <button class="btn btn-outline-danger" onclick="confirmCancel()">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel Request
+                                </button>
+                            {% endif %}
+                            <a href="{% url 'service_requests' %}" class="btn btn-outline-secondary ms-2">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Requests
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <!-- Service Type and Status -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted mb-2">Service Type</h6>
+                                <p class="mb-0 fs-5">
+                                    <i class="bi bi-tools me-2"></i>
+                                    {% if request_obj.service %}
+                                        {{ request_obj.service|title }}
+                                    {% else %}
+                                        {{ request_obj.service_type|title }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted mb-2">Status</h6>
+                                {% if request_obj.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark fs-6">Pending</span>
+                                {% elif request_obj.status == 'accepted' or request_obj.status == 'approved' %}
+                                    <span class="badge bg-success fs-6">Accepted</span>
+                                {% elif request_obj.status == 'completed' %}
+                                    <span class="badge bg-info fs-6">Completed</span>
+                                {% elif request_obj.status == 'cancelled' or request_obj.status == 'rejected' %}
+                                    <span class="badge bg-danger fs-6">Cancelled</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Dates -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted mb-2">Requested On</h6>
+                                <p class="mb-0">
+                                    <i class="bi bi-calendar-event me-2"></i>
+                                    {{ request_obj.created_at|date:"F d, Y" }}
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    {{ request_obj.created_at|time:"g:i A" }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted mb-2">Preferred Date</h6>
+                                <p class="mb-0">
+                                    <i class="bi bi-calendar-check me-2"></i>
+                                    {{ request_obj.preferred_date|date:"F d, Y" }}
+                                </p>
+                                <p class="text-muted small mb-0">
+                                    {{ request_obj.preferred_date|time:"g:i A" }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted mb-2">Service Description</h6>
+                                <p class="mb-0">{{ request_obj.description }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-12">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted mb-2">Service Address</h6>
+                                <p class="mb-0">
+                                    <i class="bi bi-geo-alt me-2"></i>
+                                    {{ request_obj.address }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Provider Information -->
+                        {% if request_obj.provider %}
+                        <div class="col-12">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted mb-2">Service Provider</h6>
+                                <div class="d-flex align-items-center">
+                                    {% if request_obj.provider.profile_photo %}
+                                        <img src="{{ request_obj.provider.profile_photo.url }}" 
+                                             class="rounded-circle me-3" 
+                                             style="width: 48px; height: 48px; object-fit: cover;"
+                                             alt="{{ request_obj.provider.name }}">
+                                    {% else %}
+                                        <div class="rounded-circle bg-light me-3 d-flex align-items-center justify-content-center" 
+                                             style="width: 48px; height: 48px;">
+                                            <i class="bi bi-person text-muted" style="font-size: 24px;"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <h6 class="mb-1">{{ request_obj.provider.name }}</h6>
+                                        <p class="mb-0 text-muted">
+                                            <i class="bi bi-telephone me-2"></i>{{ request_obj.provider.phone }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Service Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to cancel this service request? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep It</button>
+                <button type="button" class="btn btn-danger" onclick="submitCancelForm()">Yes, Cancel Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmCancel() {
+    const modal = new bootstrap.Modal(document.getElementById('cancelModal'));
+    modal.show();
+}
+
+function submitCancelForm() {
+    document.getElementById('cancelForm').submit();
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Delete Service Booking - GharSewa Admin</title>
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Delete Service Booking #{{ booking.id }}</h1>
+    </div>
+    <section class="section">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Confirm Deletion</h5>
+          <p>Are you sure you want to delete the service booking for <strong>{{ booking.name }}</strong> ({{ booking.get_service_display }})?</p>
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="{% url 'service_bookings' %}" class="btn btn-secondary">Cancel</a>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

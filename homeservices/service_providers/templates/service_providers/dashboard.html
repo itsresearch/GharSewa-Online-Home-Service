@@ -1,0 +1,381 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% csrf_token %}
+<!-- Add version to force reload -->
+<div class="container-fluid py-4" data-version="{{ template_version }}">
+    <!-- Provider Info -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    {% if provider.profile_photo %}
+                        <img src="{{ provider.profile_photo.url }}?v={{ template_version }}" alt="{{ provider.name }}" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% else %}
+                        <img src="{% static 'img/default-profile.png' %}?v={{ template_version }}" alt="Default Profile" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% endif %}
+                    <h4 class="mb-1">{{ provider.name }}</h4>
+                    <p class="text-muted mb-2">{{ service_type }} Provider</p>
+                    
+                    <div class="mt-3">
+                        <p class="mb-2"><i class="bi bi-geo-alt"></i> {{ provider.location }}</p>
+                        <p class="mb-2"><i class="bi bi-telephone"></i> {{ provider.phone }}</p>
+                        <p class="mb-2"><i class="bi bi-envelope"></i> {{ provider.email }}</p>
+                    </div>
+
+                    <div class="mt-3">
+                        <h6 class="mb-2">Available Days:</h6>
+                        <p class="mb-0">{{ provider.available_days|default:"Not specified" }}</p>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{% url 'edit_profile' %}" class="btn btn-primary w-100">
+                            <i class="bi bi-pencil"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <!-- Service Request Tabs -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link {% if not request.GET.tab or request.GET.tab == 'pending' %}active{% endif %}" href="?tab=pending&v={{ template_version }}">
+                                Pending Requests <span class="badge bg-primary ms-1">{{ total_pending }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.GET.tab == 'accepted' %}active{% endif %}" href="?tab=accepted&v={{ template_version }}">
+                                Accepted <span class="badge bg-success ms-1">{{ total_accepted }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.GET.tab == 'completed' %}active{% endif %}" href="?tab=completed&v={{ template_version }}">
+                                Completed <span class="badge bg-info ms-1">{{ total_completed }}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Location</th>
+                                    <th>Date</th>
+                                    <th>Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if not request.GET.tab or request.GET.tab == 'pending' %}
+                                    {% if pending_requests %}
+                                        {% for request in pending_requests %}
+                                            <tr>
+                                                <td>{{ request.name }}</td>
+                                                <td>{{ request.address }}</td>
+                                                <td>
+                                                    {{ request.preferred_date|date:"M d, Y" }}<br>
+                                                    <small class="text-muted">{{ request.preferred_date|time:"g:i A" }}</small>
+                                                </td>
+                                                <td>{{ request.phone }}</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-sm btn-success action-btn" 
+                                                                data-action="accept" 
+                                                                data-request-id="{{ request.id }}">
+                                                            Accept
+                                                        </button>
+                                                        <button class="btn btn-sm btn-danger action-btn" 
+                                                                data-action="reject" 
+                                                                data-request-id="{{ request.id }}">
+                                                            Reject
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4">
+                                                <img src="{% static 'img/no-requests.svg' %}?v={{ template_version }}" alt="No Requests" style="width: 120px; margin-bottom: 1rem;">
+                                                <h5>No pending requests</h5>
+                                                <p class="text-muted">New service requests will appear here</p>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if request.GET.tab == 'accepted' %}
+                                    {% if accepted_requests %}
+                                        {% for request in accepted_requests %}
+                                            <tr>
+                                                <td>{{ request.name }}</td>
+                                                <td>{{ request.address }}</td>
+                                                <td>
+                                                    {{ request.preferred_date|date:"M d, Y" }}<br>
+                                                    <small class="text-muted">{{ request.preferred_date|time:"g:i A" }}</small>
+                                                </td>
+                                                <td>{{ request.phone }}</td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-info action-btn" 
+                                                            data-action="complete" 
+                                                            data-request-id="{{ request.id }}">
+                                                        Mark Complete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4">
+                                                <img src="{% static 'img/no-accepted.svg' %}?v={{ template_version }}" alt="No Accepted Requests" style="width: 120px; margin-bottom: 1rem;">
+                                                <h5>No accepted requests</h5>
+                                                <p class="text-muted">Accepted service requests will appear here</p>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if request.GET.tab == 'completed' %}
+                                    {% if completed_requests %}
+                                        {% for request in completed_requests %}
+                                            <tr>
+                                                <td>{{ request.name }}</td>
+                                                <td>{{ request.address }}</td>
+                                                <td>
+                                                    {{ request.preferred_date|date:"M d, Y" }}<br>
+                                                    <small class="text-muted">{{ request.preferred_date|time:"g:i A" }}</small>
+                                                </td>
+                                                <td>{{ request.phone }}</td>
+                                                <td>
+                                                    <span class="badge bg-success">Completed</span>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4">
+                                                <img src="{% static 'img/no-completed.svg' %}?v={{ template_version }}" alt="No Completed Services" style="width: 120px; margin-bottom: 1rem;">
+                                                <h5>No completed services</h5>
+                                                <p class="text-muted">Completed service requests will appear here</p>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Modals -->
+<div class="modal fade" id="acceptModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Accept Request</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <h4>Are you sure you want to accept this request?</h4>
+                <p class="text-muted">You will be assigned to this service request.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmAccept">
+                    Confirm Accept
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Reject Request</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <h4>Are you sure you want to reject this request?</h4>
+                <p class="text-muted">The customer will be notified and can request another provider.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmReject">
+                    Confirm Reject
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="completeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title">Complete Service</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <h4>Mark this service as completed?</h4>
+                <p class="text-muted">This will notify the customer that the service has been completed.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-info" id="confirmComplete">
+                    Confirm Complete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let currentRequestId = null;
+
+    // Initialize action buttons
+    function initializeActionButtons() {
+        document.querySelectorAll('.action-btn').forEach(button => {
+            button.removeEventListener('click', handleActionClick);
+            button.addEventListener('click', handleActionClick);
+        });
+    }
+
+    // Handle button clicks
+    function handleActionClick(e) {
+        const action = this.dataset.action;
+        currentRequestId = this.dataset.requestId;
+        
+        if (action === 'accept') {
+            const modal = new bootstrap.Modal(document.getElementById('acceptModal'));
+            modal.show();
+        } else if (action === 'reject') {
+            const modal = new bootstrap.Modal(document.getElementById('rejectModal'));
+            modal.show();
+        } else if (action === 'complete') {
+            const modal = new bootstrap.Modal(document.getElementById('completeModal'));
+            modal.show();
+        }
+    }
+
+    // Initialize buttons on page load
+    initializeActionButtons();
+
+    // Handle confirm actions
+    ['accept', 'reject', 'complete'].forEach(action => {
+        const button = document.getElementById(`confirm${action.charAt(0).toUpperCase() + action.slice(1)}`);
+        if (button) {
+            button.addEventListener('click', function() {
+                processRequest(currentRequestId, action);
+                const modalElement = this.closest('.modal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) {
+                    modal.hide();
+                }
+            });
+        }
+    });
+
+    // Process the request
+    function processRequest(requestId, action) {
+        if (!requestId) {
+            showToast('Error: Request ID not found', 'error');
+            return;
+        }
+
+        console.log(`[DEBUG] Processing ${action} action for request ${requestId}`);
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const loadingToast = showToast('Processing...', 'info');
+        
+        fetch(`/service-providers/handle-request/${requestId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken,
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            },
+            body: `action=${action}`
+        })
+        .then(response => {
+            console.log(`[DEBUG] Response status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            console.log(`[DEBUG] Response data:`, data);
+            loadingToast.hide();
+            
+            if (data.status === 'success') {
+                showToast(data.message, 'success');
+                // Force reload with cache busting
+                setTimeout(() => {
+                    const currentTab = new URLSearchParams(window.location.search).get('tab') || 'pending';
+                    window.location.href = `${window.location.pathname}?tab=${currentTab}&v=${Date.now()}`;
+                }, 1500);
+            } else {
+                showToast(data.message || 'An error occurred', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('[DEBUG] Error:', error);
+            loadingToast.hide();
+            showToast('An error occurred. Please try again.', 'error');
+        });
+    }
+
+    // Toast notification function
+    function showToast(message, type) {
+        const toastContainer = document.createElement('div');
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.top = '20px';
+        toastContainer.style.right = '20px';
+        toastContainer.style.zIndex = '1050';
+        
+        const toastEl = document.createElement('div');
+        toastEl.className = `toast align-items-center text-white bg-${type === 'error' ? 'danger' : type} border-0`;
+        toastEl.setAttribute('role', 'alert');
+        toastEl.setAttribute('aria-live', 'assertive');
+        toastEl.setAttribute('aria-atomic', 'true');
+        
+        toastEl.innerHTML = `
+            <div class="d-flex">
+                <div class="toast-body">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        `;
+        
+        toastContainer.appendChild(toastEl);
+        document.body.appendChild(toastContainer);
+        
+        const toast = new bootstrap.Toast(toastEl, {
+            animation: true,
+            autohide: true,
+            delay: 3000
+        });
+        
+        toast.show();
+        
+        toastEl.addEventListener('hidden.bs.toast', () => {
+            document.body.removeChild(toastContainer);
+        });
+        
+        return toast;
+    }
+});
+</script>
+{% endblock %} 

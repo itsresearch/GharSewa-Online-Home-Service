@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #0d6efd;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0d6efd;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Welcome to GharSewa!</h2>
+        </div>
+        
+        <p>Dear {{ name }},</p>
+        
+        <p>Thank you for registering as a service provider with GharSewa. To complete your registration and start accepting service requests, please verify your email address by clicking the button below:</p>
+        
+        <p style="text-align: center;">
+            <a href="{{ verification_url }}" class="button">Verify Email Address</a>
+        </p>
+        
+        <p>If the button doesn't work, you can also copy and paste this link into your browser:</p>
+        <p style="word-break: break-all;">{{ verification_url }}</p>
+        
+        <p>This verification link will expire in 24 hours for security reasons.</p>
+        
+        <p>Once verified, you'll be able to:</p>
+        <ul>
+            <li>View service requests from customers</li>
+            <li>Accept or reject service requests</li>
+            <li>Manage your service provider profile</li>
+            <li>Communicate with customers</li>
+        </ul>
+        
+        <p>If you didn't create this account, please ignore this email.</p>
+        
+        <div class="footer">
+            <p>Best regards,<br>The GharSewa Team</p>
+            <p>This is an automated message, please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html> 

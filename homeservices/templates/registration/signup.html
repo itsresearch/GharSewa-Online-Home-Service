@@ -1,0 +1,262 @@
+{% load static crispy_forms_tags socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* Center the form in the viewport */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Form container from Uiverse */
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-size: 28px;
+            color: royalblue;
+            font-weight: 600;
+            letter-spacing: -1px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: 30px;
+        }
+
+        .title::before,
+        .title::after {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            left: 0px;
+            background-color: royalblue;
+        }
+
+        .title::before {
+            width: 18px;
+            height: 18px;
+        }
+
+        .title::after {
+            width: 18px;
+            height: 18px;
+            animation: pulse 1s linear infinite;
+        }
+
+        .message,
+        .signin {
+            color: rgba(88, 87, 87, 0.822);
+            font-size: 14px;
+        }
+
+        .signin {
+            text-align: center;
+        }
+
+        .signin a {
+            color: royalblue;
+            text-decoration: none;
+        }
+
+        .signin a:hover {
+            text-decoration: underline royalblue;
+        }
+
+        .form label {
+            position: relative;
+            width: 100%;
+        }
+
+        .form label .input {
+            width: 100%;
+            padding: 10px 10px 20px 10px;
+            outline: 0;
+            border: 1px solid rgba(105, 105, 105, 0.397);
+            border-radius: 10px;
+        }
+
+        .form label .input + span {
+            position: absolute;
+            left: 10px;
+            top: 15px;
+            color: grey;
+            font-size: 0.9em;
+            cursor: text;
+            transition: 0.3s ease;
+        }
+
+        .form label .input:placeholder-shown + span {
+            top: 15px;
+            font-size: 0.9em;
+        }
+
+        .form label .input:focus + span,
+        .form label .input:valid + span {
+            top: 30px;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+
+        .form label .input:valid + span {
+            color: green;
+        }
+
+        .submit {
+            border: none;
+            outline: none;
+            background-color: royalblue;
+            padding: 10px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .submit:hover {
+            background-color: rgb(56, 90, 194);
+        }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            height: 45px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            background-color: #db4437;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+
+        .btn-google img {
+            width: 20px;
+        }
+
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .password-toggle {
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+
+        .password-toggle label {
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(0.9);
+                opacity: 1;
+            }
+            to {
+                transform: scale(1.8);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form method="post" class="form">
+        {% csrf_token %}
+        <p class="title">Register</p>
+        <p class="message">Signup now and get full access to our app.</p>
+
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Name field -->
+        <label>
+            <input type="text" name="name" class="input" id="id_name" required 
+                   value="{{ form.name.value|default_if_none:'' }}">
+            <span>Full Name</span>
+        </label>
+
+        <!-- Email field -->
+        <label>
+            <input type="email" name="email" class="input" id="id_email" required 
+                   value="{{ form.email.value|default_if_none:'' }}">
+            <span>Email</span>
+        </label>
+
+        <!-- Password fields -->
+        <label>
+            <input type="password" name="password1" class="input" id="id_password1" required>
+            <span>Password</span>
+        </label>
+
+        <label>
+            <input type="password" name="password2" class="input" id="id_password2" required>
+            <span>Confirm Password</span>
+        </label>
+
+        <!-- Checkbox to toggle both password fields -->
+        <div class="password-toggle">
+            <input type="checkbox" id="togglePasswords" onclick="togglePasswordsVisibility()">Show Passwords
+            <label for="togglePasswords"></label>
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="submit">Sign Up</button>
+
+        <!-- Google Sign In button -->
+        <p class="message text-center">Sign in with:</p>
+        <a href="{% provider_login_url 'google' %}" class="btn-google">
+            <img src="{% static 'img/google-icon.png' %}" alt="Google"> Sign in with Google
+        </a>
+
+        <p class="signin">Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+    </form>
+
+    <script>
+        function togglePasswordsVisibility() {
+            const password1 = document.getElementById("id_password1");
+            const password2 = document.getElementById("id_password2");
+            const isChecked = document.getElementById("togglePasswords").checked;
+
+            password1.type = isChecked ? "text" : "password";
+            password2.type = isChecked ? "text" : "password";
+        }
+    </script>
+</body>
+</html>

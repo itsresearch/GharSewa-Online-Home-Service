@@ -1,0 +1,234 @@
+{% load static crispy_forms_tags socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>GharSewa - Home Repair Website </title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+    <!-- Spinner End -->
+     
+ <!-- Navbar Start -->
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-lg-0 fixed-top">
+    <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center">
+        <img src="{% static 'img/logo.png' %}" alt="GharSewa Logo" class="me-3" style="height: 90px; width: auto;">
+    </a>
+
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-3 py-lg-0">
+            <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+            <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
+            <a href="{% url 'service' %}" class="nav-item nav-link">Our Services</a>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                <div class="dropdown-menu bg-light m-0">
+                    <a href="{% url 'team' %}" class="dropdown-item">Our Team</a>
+                    <a href="{% url 'testimonial' %}" class="dropdown-item">Testimonials</a>
+                </div>
+            </div>
+            <a href="{% url 'contact' %}" class="nav-item nav-link">Contact Us</a>
+        </div>
+    </div>
+</nav>
+<!-- Navbar End -->
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center py-5">
+            <h1 class="display-4 text-white animated slideInDown mb-4">About Us</h1>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="position-relative overflow-hidden ps-5 pt-5 h-100" style="min-height: 400px;">
+                        <img class="position-absolute w-100 h-100" src="{% static 'img/exterior.png' %}" alt="" style="object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 bg-white pe-3 pb-3" style="width: 200px; height: 200px;">
+                            <div class="d-flex flex-column justify-content-center text-center bg-primary h-100 p-3">
+                                <h1 class="text-white">1</h1>
+                                <h2 class="text-white">Year</h2>
+                                <h5 class="text-white mb-0">Experience</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="h-100">
+                        <div class="border-start border-5 border-primary ps-4 mb-5">
+                            <h6 class="text-body text-uppercase mb-2">About Us</h6>
+                            <h1 class="display-6 mb-0">Making Homes Happier & Workplaces Smarter</h1>
+                        </div>
+                        <p>At GharSewa, we’re committed to providing reliable, efficient, and affordable home repair and maintenance services. Whether it's a quick fix or a full-scale service, our skilled professionals ensure top-quality work every time.</p>
+                        <p class="mb-4">With a growing team of experienced technicians and a customer-first approach, we strive to make home services convenient and stress-free. From plumbing and electrical to cleaning and flooring—we’re here to help you keep your space in perfect shape.</p>
+                        <p class="mb-4">Customer satisfaction is at the heart of what we do. That’s why we offer timely services, clear communication, and transparent pricing.</p>
+                        <div class="border-top mt-4 pt-4">
+                            <div class="row g-4">
+                                <div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.1s">
+                                    <i class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"></i>
+                                    <h6 class="mb-0">Ontime at services</h6>
+                                </div>
+                                <div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.3s">
+                                    <i class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"></i>
+                                    <h6 class="mb-0">24/7 hours services</h6>
+                                </div>
+                                <div class="col-sm-4 d-flex wow fadeIn" data-wow-delay="0.5s">
+                                    <i class="fa fa-check fa-2x text-primary flex-shrink-0 me-3"></i>
+                                    <h6 class="mb-0">Verified professionals</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+      </div>
+      
+     <!-- On-Site Payment Note Start -->
+<div class="container-xxl py-4">
+    <div class="container">
+        <div class="rounded-4 shadow p-4 d-flex align-items-start wow fadeInUp" data-wow-delay="0.1s"
+             style="background-color: #F47B44; border-left: 8px solid #fff;">
+            <div class="me-3 fs-3 text-white">
+                ⚠️
+            </div>
+            <div>
+                <h5 class="text-white fw-bold mb-2">
+                    On-site Payment Only
+                </h5>
+                <p class="mb-0 text-white">
+                    💰 Please note that <strong>GharSewa</strong> currently supports <u>on-site payments</u> only.<br>
+                    🔧 Make the payment directly to the service provider <strong>after the service is completed</strong> at your location.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- On-Site Payment Note End -->
+
+
+    <!-- Video Section Start -->
+<div class="container-xxl py-5 bg-light">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="ratio ratio-16x9">
+                    <iframe class="rounded" src="https://www.youtube.com/embed/4ENbC7Nfqks?si=iwgalRTS4psWIByf" title="Construction Video" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                <div class="border-start border-5 border-primary ps-4 mb-4">
+                    <h6 class="text-body text-uppercase mb-2">Why GharSewa?</h6>
+                    <h1 class="display-6 mb-0">Trusted Professionals. Transparent Pricing. Quality Service.</h1>
+                </div>
+                <p class="mb-3">GharSewa is Nepal’s one-stop solution for all home maintenance and repair needs. Our team of experts is committed to delivering seamless, hassle-free, and professional services at your doorstep.</p>
+                <p class="mb-3">With our dedication to quality and customer satisfaction, we continue to grow as a reliable brand in home services—making your life easier, one service at a time.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Video Section End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h1 class="text-white mb-4"><i class="fa fa-building text-primary me-3"></i>GharSewa</h1>
+                    <p>Best Service at Best Price.</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-square btn-outline-primary me-1" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-square btn-outline-primary me-1" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-square btn-outline-primary me-1" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-square btn-outline-primary me-0" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-light mb-4">Address</h4>
+                    <p><i class="fa fa-map-marker-alt me-3"></i>Minbhawan , Kathmandu</p>
+                    <p><i class="fa fa-phone-alt me-3"></i>+01 0987654</p>
+                    <p><i class="fa fa-envelope me-3"></i>info@gharsewa.com</p>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h4 class="text-light mb-4">Quick Links</h4>
+                    <a class="btn btn-link" href="{% url 'about' %}">About Us</a>
+                    <a class="btn btn-link" href="{% url 'contact' %}">Contact Us</a>
+                    <a class="btn btn-link" href="{% url 'service' %}">Our Services</a>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a href="#">GharSewa</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top" style="background-color: #F47B44; border-color: #F47B44; border-radius: 100px;">
+    <i class="bi bi-arrow-up"></i>
+</a>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'lib/wow/wow.min.js' %}"></script>
+<script src="{% static 'lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+<!-- Template Javascript -->
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

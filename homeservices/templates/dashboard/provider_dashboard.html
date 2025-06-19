@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Provider Info -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            {% if provider.photo %}
+                                <img src="{{ provider.photo.url }}" alt="{{ provider.name }}" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                                    {{ provider.name|make_list|first|upper }}
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h4 class="mb-1">{{ provider.name }}</h4>
+                                <p class="text-muted mb-0">{{ service_type }} Provider</p>
+                            </div>
+                        </div>
+                        <a href="{% url 'provider_edit_profile' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-pencil-square"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-start border-primary border-4">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">Pending Requests</h6>
+                    <h3 class="mb-0">{{ pending_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-start border-success border-4">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">Accepted Requests</h6>
+                    <h3 class="mb-0">{{ accepted_count }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-start border-info border-4">
+                <div class="card-body">
+                    <h6 class="text-muted mb-1">Completed Services</h6>
+                    <h3 class="mb-0">{{ completed_count }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Pending Service Requests</h5>
+                </div>
+                <div class="card-body">
+                    {% if pending_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>Note</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in pending_requests %}
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <h6 class="mb-0">{{ request.name }}</h6>
+                                                    <small class="text-muted">{{ request.email }}</small><br>
+                                                    <small class="text-muted">{{ request.phone }}</small>
+                                                </div>
+                                            </td>
+                                            <td>{{ request.address }}</td>
+                                            <td>{{ request.preferred_date }}</td>
+                                            <td>{{ request.note|default:"No notes" }}</td>
+                                            <td>
+                                                <span class="badge bg-warning">Pending</span>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-success me-2" onclick="updateRequest('{{ request.id }}', 'approve')">
+                                                    <i class="bi bi-check-lg"></i> Accept
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="updateRequest('{{ request.id }}', 'reject')">
+                                                    <i class="bi bi-x-lg"></i> Reject
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <img src="{% static 'img/no-data.svg' %}" alt="No Requests" style="width: 120px; opacity: 0.5;">
+                            <h5 class="mt-3 text-muted">No pending requests</h5>
+                            <p class="text-muted">New service requests for {{ service_type }} will appear here</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Service Requests -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">All Service Requests</h5>
+                </div>
+                <div class="card-body">
+                    {% if all_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Location</th>
+                                        <th>Date</th>
+                                        <th>Note</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in all_requests %}
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <h6 class="mb-0">{{ request.name }}</h6>
+                                                    <small class="text-muted">{{ request.email }}</small><br>
+                                                    <small class="text-muted">{{ request.phone }}</small>
+                                                </div>
+                                            </td>
+                                            <td>{{ request.address }}</td>
+                                            <td>{{ request.preferred_date }}</td>
+                                            <td>{{ request.note|default:"No notes" }}</td>
+                                            <td>
+                                                {% if request.status == 'pending' %}
+                                                    <span class="badge bg-warning">Pending</span>
+                                                {% elif request.status == 'approved' %}
+                                                    <span class="badge bg-success">Accepted</span>
+                                                {% elif request.status == 'completed' %}
+                                                    <span class="badge bg-info">Completed</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Rejected</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if request.status == 'approved' %}
+                                                    <button class="btn btn-sm btn-info" onclick="updateRequest('{{ request.id }}', 'complete')">
+                                                        <i class="bi bi-check-circle"></i> Mark Complete
+                                                    </button>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <img src="{% static 'img/no-data.svg' %}" alt="No Requests" style="width: 120px; opacity: 0.5;">
+                            <h5 class="mt-3 text-muted">No service requests found</h5>
+                            <p class="text-muted">Service requests for {{ service_type }} will appear here</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notifications -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="toast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toast-message"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function updateRequest(requestId, action) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    // Show loading state
+    const button = document.querySelector(`button[onclick="updateRequest('${requestId}', '${action}')"]`);
+    const originalText = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
+    fetch(`/service-providers/handle-request/${requestId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+        },
+        body: `action=${action}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        
+        if (data.status === 'success') {
+            toast.classList.remove('bg-danger');
+            toast.classList.add('bg-success');
+            toastMessage.textContent = data.message;
+            
+            // Reload the page after a short delay
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        } else {
+            toast.classList.remove('bg-success');
+            toast.classList.add('bg-danger');
+            toastMessage.textContent = data.message;
+            // Reset button state
+            button.disabled = false;
+            button.innerHTML = originalText;
+        }
+        
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        toast.classList.remove('bg-success');
+        toast.classList.add('bg-danger');
+        toastMessage.textContent = 'An error occurred. Please try again.';
+        const bsToast = new bootstrap.Toast(toast);
+        bsToast.show();
+        
+        // Reset button state
+        button.disabled = false;
+        button.innerHTML = originalText;
+    });
+}
+</script>
+{% endblock %}
+{% endblock %} 

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Service Request History -->
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="m-0 font-weight-bold text-primary">My Service Requests</h5>
+                </div>
+                <div class="card-body">
+                    {% if service_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Service Type</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Provider</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in service_requests %}
+                                        <tr>
+                                            <td>{{ request.service_type.name }}</td>
+                                            <td>{{ request.location }}</td>
+                                            <td>
+                                                {% if request.status == 'pending' %}
+                                                    <span class="badge bg-warning">Pending</span>
+                                                {% elif request.status == 'accepted' %}
+                                                    <span class="badge bg-success">Accepted</span>
+                                                {% elif request.status == 'completed' %}
+                                                    <span class="badge bg-info">Completed</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Rejected</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ request.created_at|date:"M d, Y" }}</td>
+                                            <td>
+                                                {% if request.provider %}
+                                                    {{ request.provider.name }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <img src="{% static 'img/no-requests.svg' %}" alt="No Requests" style="width: 150px;" class="mb-3">
+                            <h5 class="text-muted">No Service Requests Yet</h5>
+                            <p class="text-muted">Book your first service using the form on the right.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Book Service Form -->
+        <div class="col-lg-4">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <h5 class="m-0 font-weight-bold text-primary">Book a Service</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'book_service' %}">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span class="text-danger">*</span>
+                                    {% endif %}
+                                </label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% if field.errors %}
+                                    {% for error in field.errors %}
+                                        <div class="invalid-feedback d-block">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-calendar-check me-2"></i>Book Service
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.table th {
+    border-top: none;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.badge {
+    padding: 0.5em 0.75em;
+}
+</style>
+{% endblock %}

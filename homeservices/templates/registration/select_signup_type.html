@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center mb-5">
+            <h2 class="display-4 mb-3">Join GharSewa</h2>
+            <p class="text-muted lead">Choose how you want to join our platform</p>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <!-- Regular User Card -->
+        <div class="col-md-5 mb-4">
+            <div class="card h-100 shadow-sm hover-card">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <img src="{% static 'img/user-icon.svg' %}" alt="User" class="img-fluid mb-3" style="max-width: 80px;">
+                        <h3>Regular User</h3>
+                        <p class="text-muted">Looking for home services?</p>
+                    </div>
+                    
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Book services easily
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Track service requests
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Rate service providers
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Search best providers
+                        </li>
+                    </ul>
+                    
+                    <a href="{% url 'user_signup' %}" class="btn btn-primary btn-lg w-100">
+                        Sign Up as User
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Service Provider Card -->
+        <div class="col-md-5 mb-4">
+            <div class="card h-100 shadow-sm hover-card">
+                <div class="card-body text-center p-5">
+                    <div class="mb-4">
+                        <img src="{% static 'img/provider-icon.svg' %}" alt="Provider" class="img-fluid mb-3" style="max-width: 80px;">
+                        <h3>Service Provider</h3>
+                        <p class="text-muted">Want to offer your services?</p>
+                    </div>
+                    
+                    <ul class="list-unstyled text-start mb-4">
+                        <li class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Receive service requests
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Manage your schedule
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Build your reputation
+                        </li>
+                        <li class="mb-3">
+                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                            Grow your business
+                        </li>
+                    </ul>
+                    
+                    <a href="{% url 'provider_signup' %}" class="btn btn-primary btn-lg w-100">
+                        Sign Up as Provider
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8 text-center">
+            <p class="mb-0">
+                Already have an account? <a href="{% url 'login' %}" class="text-primary">Log in here</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+.hover-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border-radius: 15px;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+}
+
+.card {
+    border: none;
+}
+
+.border-primary {
+    border: 2px solid #0d6efd !important;
+}
+
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 8px;
+}
+
+.list-unstyled li {
+    font-size: 1.1rem;
+}
+
+.display-4 {
+    font-weight: 600;
+}
+
+.lead {
+    font-size: 1.25rem;
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,350 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Edit Profile - GharSewa Admin</title>
+  <meta content="Edit admin profile for GharSewa" name="description">
+  <meta content="GharSewa, admin, profile, edit" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f5f6fa;
+      font-family: 'Nunito', sans-serif;
+    }
+    .header {
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 20px;
+    }
+    .header .logo img {
+      max-height: 40px;
+    }
+    .header .logo span {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e2a44;
+      margin-left: 10px;
+    }
+    .sidebar {
+      background-color: #1e2a44;
+      color: #fff;
+      padding-top: 20px;
+      min-height: 100vh;
+      transition: all 0.3s ease;
+    }
+    .sidebar .nav-link {
+      color: #b0b9d6;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin: 5px 10px;
+      transition: all 0.3s ease;
+    }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+      background-color: #2a3b6b;
+      color: #fff;
+    }
+    .sidebar .nav-heading {
+      color: #f47b44;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 15px 20px;
+    }
+    .main {
+      padding: 40px 30px;
+      background-color: #f5f6fa;
+      transition: padding 0.3s ease;
+    }
+    .pagetitle h1 {
+      color: #1e2a44;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .breadcrumb-item a {
+      color: #f47b44;
+      text-decoration: none;
+    }
+    .breadcrumb-item a:hover {
+      text-decoration: underline;
+    }
+    .card {
+      border: none;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(145deg, #ffffff, #f8f9fd);
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card-header {
+      background: linear-gradient(90deg, #f47b44, #e5632f);
+      color: #fff;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+    }
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #fff;
+      margin-right: 20px;
+    }
+    .card-title {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    .form-label {
+      font-weight: 600;
+      color: #1e2a44;
+      margin-bottom: 5px;
+    }
+    .form-control {
+      border-radius: 8px;
+      border: 1px solid #e0e4ec;
+      padding: 10px 15px;
+      font-size: 0.95rem;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    .form-control:focus {
+      border-color: #f47b44;
+      box-shadow: 0 0 5px rgba(244, 123, 68, 0.3);
+    }
+    .btn-primary {
+      background-color: #f47b44;
+      border-color: #f47b44;
+      padding: 10px 20px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #e5632f;
+      border-color: #e5632f;
+    }
+    .btn-secondary {
+      background-color: #6c757d;
+      border-color: #6c757d;
+      padding: 10px 20px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268;
+      border-color: #5a6268;
+    }
+    .invalid-feedback {
+      font-size: 0.875rem;
+      margin-top: 5px;
+    }
+    .alert {
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .back-to-top {
+      background-color: #f47b44;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s ease;
+    }
+    .back-to-top:hover {
+      background-color: #e5632f;
+    }
+    @media (max-width: 991px) {
+      .main {
+        padding: 20px;
+      }
+      .card-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .profile-img {
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header id="header" class="header fixed-top d-flex align-items-center">
+    <div class="d-flex align-items-center justify-content-between">
+      <a href="{% url 'user_dashboard' %}" class="logo d-flex align-items-center">
+        <img src="{% static 'assets/img/logo.png' %}" alt="GharSewa Logo">
+        <span class="d-none d-lg-block">GharSewa Admin</span>
+      </a>
+      <i class="bi bi-list toggle-sidebar-btn"></i>
+    </div>
+    <nav class="header-nav ms-auto">
+      <ul class="d-flex align-items-center">
+        <li class="nav-item dropdown pe-3">
+          <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+            {% if request.user.profile_photo %}
+              <img src="{{ request.user.profile_photo }}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+            {% else %}
+              <img src="{% static 'assets/img/profile-img.jpg' %}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
+            {% endif %}
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ request.user.name|default:request.user.email }}</span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+            <li class="dropdown-header">
+              <h6>{{ request.user.name|default:"User" }}</h6>
+              <span>Admin</span>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'user_profile' %}"><i class="bi bi-person"></i> My Profile</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Sign Out</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item"><a class="nav-link" href="{% url 'user_dashboard' %}"><i class="bi bi-grid"></i><span>Dashboard</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="{% url 'service_bookings' %}"><i class="bi bi-list-task"></i><span>Service Bookings</span></a></li>
+      <li class="nav-heading">Account</li>
+      <li class="nav-item"><a class="nav-link active" href="{% url 'user_profile' %}"><i class="bi bi-person"></i><span>Profile</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Edit Profile</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item"><a href="{% url 'user_profile' %}">Profile</a></li>
+          <li class="breadcrumb-item active">Edit</li>
+        </ol>
+      </nav>
+    </div>
+
+    <section class="section">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="card">
+        <div class="card-header">
+          <img src="{% if request.user.profile_photo %}{{ request.user.profile_photo }}{% else %}{% static 'assets/img/profile-img.jpg' %}{% endif %}" alt="Profile Photo" class="profile-img">
+          <h5 class="card-title">Edit Your Profile</h5>
+        </div>
+        <div class="card-body p-4">
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="id_email" class="form-label">Email</label>
+                  <input type="email" name="email" class="form-control" id="id_email" value="{{ profile_form.email.value|default:request.user.email }}" required>
+                  {% if profile_form.email.errors %}
+                    <div class="invalid-feedback d-block">
+                      {{ profile_form.email.errors|join:", " }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="id_name" class="form-label">Full Name</label>
+                  <input type="text" name="name" class="form-control" id="id_name" value="{{ profile_form.name.value|default:request.user.name|default:'' }}">
+                  {% if profile_form.name.errors %}
+                    <div class="invalid-feedback d-block">
+                      {{ profile_form.name.errors|join:", " }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="id_first_name" class="form-label">First Name</label>
+                  <input type="text" name="first_name" class="form-control" id="id_first_name" value="{{ profile_form.first_name.value|default:request.user.first_name|default:'' }}">
+                  {% if profile_form.first_name.errors %}
+                    <div class="invalid-feedback d-block">
+                      {{ profile_form.first_name.errors|join:", " }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="id_last_name" class="form-label">Last Name</label>
+                  <input type="text" name="last_name" class="form-control" id="id_last_name" value="{{ profile_form.last_name.value|default:request.user.last_name|default:'' }}">
+                  {% if profile_form.last_name.errors %}
+                    <div class="invalid-feedback d-block">
+                      {{ profile_form.last_name.errors|join:", " }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label for="id_profile_photo" class="form-label">Profile Photo URL</label>
+                  <input type="text" name="profile_photo" class="form-control" id="id_profile_photo" value="{{ profile_form.profile_photo.value|default:request.user.profile_photo|default:'' }}" placeholder="Enter image URL (e.g., https://example.com/image.jpg)">
+                  {% if profile_form.profile_photo.errors %}
+                    <div class="invalid-feedback d-block">
+                      {{ profile_form.profile_photo.errors|join:", " }}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end mt-4">
+              <a href="{% url 'user_profile' %}" class="btn btn-secondary me-2">Cancel</a>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer">
+    <div class="copyright">
+      © Copyright <strong><span>GharSewa Admin</span></strong>. All Rights Reserved
+    </div>
+  </footer>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

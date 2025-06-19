@@ -1,0 +1,299 @@
+{% load static crispy_forms_tags socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>GharSewa - Home Repair Website </title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/favicon.ico' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+    <!-- Spinner End -->
+    
+<!-- Navbar Start -->
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light px-4 px-lg-5 py-lg-0 fixed-top">
+    <a href="{% url 'index' %}" class="navbar-brand d-flex align-items-center">
+        <img src="{% static 'img/logo.png' %}" alt="GharSewa Logo" class="me-3" style="height: 90px; width: auto;">
+    </a>
+
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto py-3 py-lg-0">
+            <a href="{% url 'index' %}" class="nav-item nav-link">Home</a>
+            <a href="{% url 'about' %}" class="nav-item nav-link">About Us</a>
+            <a href="{% url 'service' %}" class="nav-item nav-link">Our Services</a>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                <div class="dropdown-menu bg-light m-0">
+                    <a href="{% url 'team' %}" class="dropdown-item">Our Team</a>
+                    <a href="{% url 'testimonial' %}" class="dropdown-item">Testimonials</a>
+                </div>
+            </div>
+            <a href="{% url 'contact' %}" class="nav-item nav-link">Contact Us</a>
+        </div>
+</nav>
+<!-- Navbar End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container text-center py-5">
+            <h1 class="display-4 text-white animated slideInDown mb-4">Our Services</h1>
+        </div>
+    </div>
+    <!-- Page Header End -->
+    <div class="container mb-5">
+        {% if user.is_authenticated %}
+            
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                You are not logged in.
+            </div>
+        {% endif %}
+    </div>
+
+
+    <!-- Service Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5 align-items-end mb-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="border-start border-5 border-primary ps-4">
+                        <h6 class="text-body text-uppercase mb-2">Our Services</h6>
+                        <h1 class="display-6 mb-0">Construction And Renovation Solutions</h1>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-6 text-lg-end wow fadeInUp" data-wow-delay="0.3s">
+                    <a class="btn btn-primary py-3 px-5" href="">More Services</a>
+                </div> -->
+            </div>
+            </div>
+        </div>
+        
+
+
+    <section id="services" class="services py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-4">Our Services</h2>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <a href="{% if user.is_authenticated %}{% url 'painting' %}{% else %}{% url 'signup' %}?next={% url 'painting' %}{% endif %}" class="card-link">
+                        <div class="card h-100 text-center p-4 service-card" style="background-image: url('{% static 'img/painter.jpeg' %}');">
+                            <div class="card-overlay"></div>
+                            <i class="fas fa-paint-roller fa-3x mb-3 text-white"></i>
+                            <h3 class="text-white">Professional Painting</h3>
+                            <p class="text-white">Interior & exterior painting services with premium quality materials</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <a href="{% if user.is_authenticated %}{% url 'plastering' %}{% else %}{% url 'signup' %}?next={% url 'plastering' %}{% endif %}" class="card-link">
+                        <div class="card h-100 text-center p-4 service-card" style="background-image: url('{% static 'img/plaster.jpg' %}');">
+                            <div class="card-overlay"></div>
+                            <i class="fas fa-tools fa-3x mb-3 text-white"></i>
+                            <h3 class="text-white">Plastering & Renovation</h3>
+                            <p class="text-white">Complete wall solutions and structural renovations</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <a href="{% if user.is_authenticated %}{% url 'electrical' %}{% else %}{% url 'signup' %}?next={% url 'electrical' %}{% endif %}" class="card-link">
+                        <div class="card h-100 text-center p-4 service-card" style="background-image: url('{% static 'img/electrician.jpg' %}');">
+                            <div class="card-overlay"></div>
+                            <i class="fas fa-bolt fa-3x mb-3 text-white"></i>
+                            <h3 class="text-white">Electrical Works</h3>
+                            <p class="text-white">Safe and modern electrical installations</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <a href="{% if user.is_authenticated %}{% url 'plumbing' %}{% else %}{% url 'signup' %}?next={% url 'plumbing' %}{% endif %}" class="card-link">
+                        <div class="card h-100 text-center p-4 service-card" style="background-image: url('{% static 'img/plumber.png' %}');">
+                        ">
+                            <div class="card-overlay"></div>
+                            <i class="fas fa-faucet fa-3x mb-3 text-white"></i>
+                            <h3 class="text-white">Plumbing Solutions</h3>
+                            <p class="text-white">24/7 emergency plumbing services</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <a href="{% if user.is_authenticated %}{% url 'flooring' %}{% else %}{% url 'signup' %}?next={% url 'flooring' %}{% endif %}" class="card-link">
+                        <div class="card h-100 text-center p-4 service-card" style="background-image: url('{% static 'img/flooring.jpg' %}');">
+                            <div class="card-overlay"></div>
+                            <i class="fas fa-paint-roller fa-3x mb-3 text-white"></i>
+                            <h3 class="text-white">flooring</h3>
+                            <p class="text-white">Interior & exterior painting services with premium quality materials</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <a href="{% if user.is_authenticated %}{% url 'roofing' %}{% else %}{% url 'signup' %}?next={% url 'roofing' %}{% endif %}" class="card-link">
+                        <div class="card h-100 text-center p-4 service-card" style="background-image: url({% static 'img/roofing.webp' %});">
+                            <div class="card-overlay"></div>
+                            <i class="fas fa-tools fa-3x mb-3 text-white"></i>
+                            <h3 class="text-white">roofing</h3>
+                            <p class="text-white">Complete wall solutions and structural renovations</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <a href="{% if user.is_authenticated %}{% url 'cleaning' %}{% else %}{% url 'signup' %}?next={% url 'cleaning' %}{% endif %}" class="card-link">
+                        <div class="card h-100 text-center p-4 service-card" style="background-image: url({% static 'img/cleaning.avif' %});">
+                            <div class="card-overlay"></div>
+                            <i class="fas fa-bolt fa-3x mb-3 text-white"></i>
+                            <h3 class="text-white">cleaning</h3>
+                            <p class="text-white">Safe and modern electrical installations</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <a href="{% if user.is_authenticated %}{% url 'appliance' %}{% else %}{% url 'signup' %}?next={% url 'appliance' %}{% endif %}" class="card-link">
+                        <div class="card h-100 text-center p-4 service-card" style="background-image: url({% static 'img/appliance_repair.jpg' %});">
+                            <div class="card-overlay"></div>
+                            <i class="fas fa-faucet fa-3x mb-3 text-white"></i>
+                            <h3 class="text-white">Appliance</h3>
+                            <p class="text-white">24/7 emergency plumbing services</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- Service End -->
+
+    <!-- Modal for showing user status -->
+    <div class="modal fade" id="signInModal" tabindex="-1" aria-labelledby="signInModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signInModalLabel">You are not signed in</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You need to sign in to proceed with the service request.
+                </div>
+                <div class="modal-footer">
+                    <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Check if the user is authenticated (logged in)
+        function checkLoginStatus(serviceUrl) {
+            {% if user.is_authenticated %}
+                // Redirect to the service form if user is signed in
+                window.location.href = serviceUrl;
+            {% else %}
+                // If not logged in, redirect to the sign-up page
+                window.location.href = "{% url 'signup' %}";
+            {% endif %}
+        }
+    
+        // Add click event for each service card
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function() {
+                const serviceUrl = card.getAttribute('data-service-url');
+                checkLoginStatus(serviceUrl);
+            });
+        });
+    </script>
+    
+
+   <!-- Footer Start -->
+<div class="container-fluid bg-dark footer mt-5 pt-5 wow fadeIn" data-wow-delay="0.1s">
+<div class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-3 col-md-6">
+            <h1 class="text-white mb-4"><i class="fa fa-building text-primary me-3"></i>GharSewa</h1>
+            <p>Best Service at Best Price.</p>
+            <div class="d-flex pt-2">
+                <a class="btn btn-square btn-outline-primary me-1" href=""><i class="fab fa-twitter"></i></a>
+                <a class="btn btn-square btn-outline-primary me-1" href=""><i class="fab fa-facebook-f"></i></a>
+                <a class="btn btn-square btn-outline-primary me-1" href=""><i class="fab fa-youtube"></i></a>
+                <a class="btn btn-square btn-outline-primary me-0" href=""><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <h4 class="text-light mb-4">Address</h4>
+            <p><i class="fa fa-map-marker-alt me-3"></i>Minbhawan , Kathmandu</p>
+            <p><i class="fa fa-phone-alt me-3"></i>+01 0987654</p>
+            <p><i class="fa fa-envelope me-3"></i>info@gharsewa.com</p>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <h4 class="text-light mb-4">Quick Links</h4>
+            <a class="btn btn-link" href="{% url 'about' %}">About Us</a>
+            <a class="btn btn-link" href="{% url 'contact' %}">Contact Us</a>
+            <a class="btn btn-link" href="{% url 'service' %}">Our Services</a>
+        </div>
+    </div>
+</div>
+<div class="container-fluid copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                &copy; <a href="#">GharSewa</a>, All Right Reserved.
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- Footer End -->
+
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top" style="background-color: #F47B44; border-color: #F47B44; border-radius: 100px;">
+<i class="bi bi-arrow-up"></i>
+</a>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'lib/wow/wow.min.js' %}"></script>
+<script src="{% static 'lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+<!-- Template Javascript -->
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

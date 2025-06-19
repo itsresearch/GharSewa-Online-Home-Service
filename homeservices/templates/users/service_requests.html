@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hidden form for cancel request -->
+    <form id="cancelForm" method="post" action="" style="display: none;">
+        {% csrf_token %}
+    </form>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">My Service Requests</h5>
+                        <a href="{% url 'service' %}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Request New Service
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if service_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="px-4">Service Type</th>
+                                        <th>Status</th>
+                                        <th>Date Requested</th>
+                                        <th>Provider</th>
+                                        <th class="text-end px-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in service_requests %}
+                                    <tr>
+                                        <td class="px-4">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-tools me-2 text-muted"></i>
+                                                {% if request.service %}
+                                                    {{ request.service|title }}
+                                                {% else %}
+                                                    {{ request.service_type|title }}
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if request.status == 'pending' %}
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            {% elif request.status == 'accepted' or request.status == 'approved' %}
+                                                <span class="badge bg-success">Accepted</span>
+                                            {% elif request.status == 'completed' %}
+                                                <span class="badge bg-info">Completed</span>
+                                            {% elif request.status == 'cancelled' or request.status == 'rejected' %}
+                                                <span class="badge bg-danger">Cancelled</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ request.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            {% if request.provider %}
+                                                <div class="d-flex align-items-center">
+                                                    {% if request.provider.profile_photo %}
+                                                        <img src="{{ request.provider.profile_photo.url }}" 
+                                                             class="rounded-circle me-2" 
+                                                             style="width: 24px; height: 24px; object-fit: cover;"
+                                                             alt="{{ request.provider.name }}">
+                                                    {% else %}
+                                                        <div class="rounded-circle bg-light me-2 d-flex align-items-center justify-content-center" 
+                                                             style="width: 24px; height: 24px;">
+                                                            <i class="bi bi-person text-muted" style="font-size: 14px;"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                    {{ request.provider.name }}
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">Pending Assignment</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end px-4">
+                                            <a href="{% url 'view_request' request.id %}" 
+                                               class="btn btn-sm btn-outline-info me-1"
+                                               title="View Details">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            {% if request.status == 'pending' %}
+                                            <button class="btn btn-sm btn-outline-danger" 
+                                                    onclick="confirmCancel({{ request.id }})"
+                                                    title="Cancel Request">
+                                                <i class="bi bi-x-circle"></i>
+                                            </button>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <img src="{% static 'img/no-requests.svg' %}" alt="No Requests" class="mb-3" style="width: 120px; opacity: 0.5;">
+                            <h5 class="text-muted mb-3">No Service Requests Yet</h5>
+                            <p class="text-muted mb-4">Start by requesting a service from our providers.</p>
+                            <a href="{% url 'service' %}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Request a Service
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Confirmation Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cancel Service Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure you want to cancel this service request? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep It</button>
+                <button type="button" class="btn btn-danger" onclick="submitCancelForm()">Yes, Cancel Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+let currentRequestId = null;
+
+function confirmCancel(requestId) {
+    currentRequestId = requestId;
+    const modal = new bootstrap.Modal(document.getElementById('cancelModal'));
+    modal.show();
+}
+
+function submitCancelForm() {
+    if (currentRequestId) {
+        const form = document.getElementById('cancelForm');
+        form.action = `/cancel-request/${currentRequestId}/`;
+        form.submit();
+    }
+}
+</script>
+{% endblock %}
+
+{% endblock %} 
